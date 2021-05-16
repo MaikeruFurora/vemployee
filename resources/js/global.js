@@ -72,6 +72,7 @@ export default {
         },
         clearFields(obj) {
             Object.keys(obj).forEach((param) => {
+                console.log(param);
                 if ( (obj[param]).toString() === "[object Object]" ) {
                     clearObjectValues(obj[param]);
                 } else {

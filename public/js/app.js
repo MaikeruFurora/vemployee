@@ -2105,7 +2105,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -2225,8 +2238,211 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('dashboard');
-    this.$Progress.start();
-    this.$Progress.finish();
+    this.getTotal();
+    this.statistic();
+  },
+  methods: {
+    getTotal: function getTotal() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var res, stationLength, result, map, _iterator, _step, item;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.$Progress.start();
+
+                _context.next = 3;
+                return _this.callApi('get', "api/getTotal");
+
+              case 3:
+                res = _context.sent;
+
+                // console.log(res);
+                if (res.status == 200 || res.status == 201) {
+                  _this.$Progress.finish();
+
+                  $(".noTeacher").text(res.data.length);
+                  stationLength = res.data.filter(function (value, index, array) {
+                    return array.indexOf(value.station) == index;
+                  });
+                  result = [];
+                  map = new Map();
+                  _iterator = _createForOfIteratorHelper(res.data);
+
+                  try {
+                    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                      item = _step.value;
+
+                      if (!map.has(item.id)) {
+                        map.set(item.id, true); // set any value to Map
+
+                        result.push({
+                          id: item.id,
+                          name: item.name
+                        });
+                      }
+                    }
+                  } catch (err) {
+                    _iterator.e(err);
+                  } finally {
+                    _iterator.f();
+                  }
+
+                  $(".noSchool").text(result.length);
+                } else {
+                  _this.$Progress.fail();
+                }
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    statistic: function statistic() {
+      // analytics7
+      var analytics7 = jQuery('#analytics7');
+
+      if (analytics7.length > 0) {
+        var options = {
+          chart: {
+            type: 'bar',
+            width: 120,
+            height: 50,
+            sparkline: {
+              enabled: true
+            }
+          },
+          colors: ['#8E54E9'],
+          plotOptions: {
+            bar: {
+              columnWidth: '20%',
+              endingShape: 'rounded'
+            }
+          },
+          series: [{
+            data: [15, 55, 60, 69, 53, 35, 54]
+          }],
+          labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          xaxis: {
+            crosshairs: {
+              width: 1
+            }
+          },
+          tooltip: {
+            fixed: {
+              enabled: false
+            },
+            x: {
+              show: false
+            },
+            y: {
+              title: {
+                formatter: function formatter(seriesName) {
+                  return '';
+                }
+              }
+            },
+            marker: {
+              show: false
+            }
+          },
+          responsive: [{
+            breakpoint: 360,
+            options: {
+              chart: {
+                width: 60,
+                height: 60
+              }
+            }
+          }, {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 100,
+                height: 80
+              }
+            }
+          }]
+        };
+        var chart = new ApexCharts(document.querySelector("#analytics7"), options);
+        chart.render();
+      } // analytics8
+
+
+      var analytics8 = jQuery('#analytics8');
+
+      if (analytics8.length > 0) {
+        var options = {
+          chart: {
+            type: 'bar',
+            width: 120,
+            height: 50,
+            sparkline: {
+              enabled: true
+            }
+          },
+          colors: ['#2bcbba'],
+          plotOptions: {
+            bar: {
+              columnWidth: '20%',
+              endingShape: 'rounded'
+            }
+          },
+          series: [{
+            data: [15, 55, 60, 69, 53, 35, 54]
+          }],
+          labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          xaxis: {
+            crosshairs: {
+              width: 1
+            }
+          },
+          tooltip: {
+            fixed: {
+              enabled: false
+            },
+            x: {
+              show: false
+            },
+            y: {
+              title: {
+                formatter: function formatter(seriesName) {
+                  return '';
+                }
+              }
+            },
+            marker: {
+              show: false
+            }
+          },
+          responsive: [{
+            breakpoint: 360,
+            options: {
+              chart: {
+                width: 60,
+                height: 60
+              }
+            }
+          }, {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 100,
+                height: 80
+              }
+            }
+          }]
+        };
+        var chart = new ApexCharts(document.querySelector("#analytics8"), options);
+        chart.render();
+      }
+    }
   }
 });
 
@@ -2343,6 +2559,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -2355,10 +2574,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      isStatus: null,
+      isPrint: false,
       value: null,
       options: [],
-      lawops: [],
-      active: false
+      lawops: []
     };
   },
   methods: {
@@ -2391,6 +2611,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
+    downloadWord: function downloadWord() {
+      window.open("api/getWordRecord/".concat(this.value.id), '_blank');
+    },
     getLawop: function getLawop() {
       var _this2 = this;
 
@@ -2400,7 +2623,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.active = true;
+                _this2.isStatus = true;
 
                 _this2.$Progress.start();
 
@@ -2411,10 +2634,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context2.sent;
 
                 if (res.status == 200) {
+                  res.data.length == 0 ? _this2.isStatus = true : _this2.isStatus = false;
+
                   _this2.$Progress.finish();
 
-                  _this2.lawops = res.data;
-                  _this2.active["false"];
+                  _this2.lawops = res.data; // console.log(res.data[0].id);
+
+                  res.data.length > 0 ? _this2.isPrint = true : _this2.isPrint = false;
                 } else {
                   _this2.$Progress.fail();
                 }
@@ -2731,6 +2957,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2764,6 +2993,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     deleteModal: function deleteModal(action) {
       action || 'show';
       $("#deleteModal").modal(action);
+    },
+    closeModal: function closeModal(action) {
+      $("#leaveCard").modal(action);
+      this.recordForm.id = null;
+      this.recordForm.teacher_id = null;
+      this.recordForm.inclusivePeriod = null;
+      this.recordForm.natureOfActivity = null;
+      this.recordForm.noOfDaysCredited = null;
+      this.recordForm.dsoNumber1 = null;
+      this.recordForm.inclusiveDates = null;
+      this.recordForm.noOfDaysLeave = null;
+      this.recordForm.serviceCreditBalance = null;
+      this.recordForm.leaveWithoutpay = null;
+      this.recordForm.natureOfLeave = null;
+      this.recordForm.dsoNumber2 = null;
+      this.recordForm.remarks = null;
     },
     downloadModal: function downloadModal(action) {
       action || 'show';
@@ -2938,6 +3183,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee5);
       }))();
     },
+    // async downloadPdf(){
+    //     window.open(`api/getPdfRecord/${this.$router.currentRoute.query.id}`,'_blank');
+    // },
     deleteRecord: function deleteRecord(record) {
       this.obj = record;
       this.deleteModal();
@@ -3252,6 +3500,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3271,6 +3522,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         station: '',
         civilStatus: ''
       },
+      isLoading: false,
       editMode: false,
       view: false,
       employees: [],
@@ -3319,15 +3571,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                _this.isLoading = true;
+
                 _this.$Progress.start();
 
-                _context.next = 3;
+                _context.next = 4;
                 return _this.callApi('get', "api/getTeacher/?page=".concat(_this.pagination.current_page));
 
-              case 3:
+              case 4:
                 res = _context.sent;
 
                 if (res.status == 200 || res.status == 201) {
+                  res.data.data.length != 0 ? _this.isLoading = true : _this.isLoading = false;
+
                   _this.$Progress.finish();
 
                   _this.employees = res.data.data;
@@ -3336,7 +3592,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.$Progress.fail();
                 }
 
-              case 5:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -41264,16 +41520,7 @@ var staticRenderFns = [
                                 staticClass:
                                   "mb-0 font-regular text-muted font-weight-bold"
                               },
-                              [_vm._v("Total Visits")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                staticClass: "mb-0 ml-auto font-weight-bold",
-                                attrs: { href: "#" }
-                              },
-                              [_c("i", { staticClass: "ti ti-more-alt" })]
+                              [_vm._v("Total Teachers")]
                             )
                           ]),
                           _vm._v(" "),
@@ -41296,13 +41543,12 @@ var staticRenderFns = [
                                 },
                                 [
                                   _c("h3", { staticClass: "mb-0" }, [
-                                    _c("i", {
-                                      staticClass: "icon-arrow-up-circle"
-                                    }),
-                                    _vm._v(" 15,640")
+                                    _c("i", { staticClass: "fa fa-group" }),
+                                    _vm._v(" "),
+                                    _c("span", { staticClass: "noTeacher" })
                                   ]),
                                   _vm._v(" "),
-                                  _c("p", [_vm._v("Monthly visitor")])
+                                  _c("p", [_vm._v("Number of Teachers")])
                                 ]
                               )
                             ]
@@ -41326,16 +41572,7 @@ var staticRenderFns = [
                                 staticClass:
                                   "mb-0 font-regular text-muted font-weight-bold"
                               },
-                              [_vm._v("Total Cost")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                staticClass: "mb-0 ml-auto font-weight-bold",
-                                attrs: { href: "#" }
-                              },
-                              [_c("i", { staticClass: "ti ti-more-alt" })]
+                              [_vm._v("Total School")]
                             )
                           ]),
                           _vm._v(" "),
@@ -41359,12 +41596,13 @@ var staticRenderFns = [
                                 [
                                   _c("h3", { staticClass: "mb-0" }, [
                                     _c("i", {
-                                      staticClass: "icon-arrow-up-circle"
+                                      staticClass: "fa fa-graduation-cap"
                                     }),
-                                    _vm._v(" 16,656")
+                                    _vm._v(" "),
+                                    _c("span", { staticClass: "noSchool" })
                                   ]),
                                   _vm._v(" "),
-                                  _c("p", [_vm._v("This month")])
+                                  _c("p", [_vm._v("Number of Schools")])
                                 ]
                               )
                             ]
@@ -41389,15 +41627,6 @@ var staticRenderFns = [
                                   "mb-0 font-regular text-muted font-weight-bold"
                               },
                               [_vm._v("Total Sales")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                staticClass: "mb-0 ml-auto font-weight-bold",
-                                attrs: { href: "#" }
-                              },
-                              [_c("i", { staticClass: "ti ti-more-alt" })]
                             )
                           ]),
                           _vm._v(" "),
@@ -41584,6 +41813,27 @@ var render = function() {
                               "ml-auto d-flex align-items-center secondary-menu text-center"
                           },
                           [
+                            _vm.isPrint
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary mr-3",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.downloadWord()
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "ti ti-download text-white pr-2"
+                                    }),
+                                    _vm._v(" Print Certificate")
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
                             _c("multiselect", {
                               attrs: {
                                 options: _vm.options,
@@ -41686,8 +41936,38 @@ var render = function() {
                                       attrs: { colspan: "7" }
                                     },
                                     [
-                                      _vm._v(
-                                        "\n                                        No data available\n                                    "
+                                      _c(
+                                        "p",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: _vm.isStatus == true,
+                                              expression: "isStatus==true"
+                                            }
+                                          ]
+                                        },
+                                        [_vm._v("No data available")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "p",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "show",
+                                              rawName: "v-show",
+                                              value: _vm.isStatus == null,
+                                              expression: "isStatus==null"
+                                            }
+                                          ]
+                                        },
+                                        [
+                                          _vm._v(
+                                            "Type the name of teacher in the search bar"
+                                          )
+                                        ]
                                       )
                                     ]
                                   )
@@ -41719,7 +41999,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "page-title mr-4 pr-4" }, [
-      _c("h1", [_vm._v("Teacher")])
+      _c("h1", [_vm._v("Leave without pay")])
     ])
   },
   function() {
@@ -42215,7 +42495,23 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(3)
+                    _c(
+                      "button",
+                      {
+                        staticClass: "close",
+                        attrs: { type: "button", "aria-label": "Close" },
+                        on: {
+                          click: function($event) {
+                            return _vm.closeModal("hide")
+                          }
+                        }
+                      },
+                      [
+                        _c("span", { attrs: { "aria-hidden": "true" } }, [
+                          _vm._v("×")
+                        ])
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
@@ -42489,31 +42785,48 @@ var render = function() {
                       _c("div", { staticClass: "form-group col-md-4" }, [
                         _c("label", [_vm._v("Nature of Leave")]),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.recordForm.natureOfLeave,
-                              expression: "recordForm.natureOfLeave"
-                            }
-                          ],
-                          staticClass: "form-control form-control-sm",
-                          attrs: { type: "text" },
-                          domProps: { value: _vm.recordForm.natureOfLeave },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.recordForm.natureOfLeave,
+                                expression: "recordForm.natureOfLeave"
                               }
-                              _vm.$set(
-                                _vm.recordForm,
-                                "natureOfLeave",
-                                $event.target.value
-                              )
+                            ],
+                            staticClass: "form-control form-control-sm",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.recordForm,
+                                  "natureOfLeave",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
                             }
-                          }
-                        })
+                          },
+                          [
+                            _c("option", { attrs: { value: "SL" } }, [
+                              _vm._v("Sick leave")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "VL" } }, [
+                              _vm._v("Vacation Leave")
+                            ])
+                          ]
+                        )
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "form-group col-md-4" }, [
@@ -42612,7 +42925,12 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-sm btn-secondary",
-                        attrs: { type: "button", "data-dismiss": "modal" }
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.closeModal("hide")
+                          }
+                        }
                       },
                       [_vm._v("Close")]
                     ),
@@ -42655,9 +42973,9 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(4),
+              _vm._m(3),
               _vm._v(" "),
-              _vm._m(5),
+              _vm._m(4),
               _vm._v(" "),
               _c("div", { staticClass: "modal-footer p-1" }, [
                 _c(
@@ -42697,7 +43015,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(6),
+              _vm._m(5),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "row" }, [
@@ -42767,7 +43085,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(7)
+              _vm._m(6)
             ])
           ]
         )
@@ -42959,23 +43277,6 @@ var staticRenderFns = [
         )
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close",
-        attrs: {
-          type: "button",
-          "data-dismiss": "modal",
-          "aria-label": "Close"
-        }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
   },
   function() {
     var _vm = this
@@ -43415,7 +43716,42 @@ var render = function() {
                                           }
                                         ]
                                       },
-                                      [_vm._m(3)]
+                                      [
+                                        _c(
+                                          "td",
+                                          {
+                                            staticClass: "text-center",
+                                            attrs: { colspan: "10" }
+                                          },
+                                          [
+                                            _c(
+                                              "small",
+                                              { staticClass: "text-muted " },
+                                              [_vm._v("No data found. ")]
+                                            ),
+                                            _vm._v(" "),
+                                            _vm.isLoading
+                                              ? _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "spinner-border spinner-border-sm",
+                                                    attrs: { role: "status" }
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "span",
+                                                      {
+                                                        staticClass: "sr-only"
+                                                      },
+                                                      [_vm._v("Loading...")]
+                                                    )
+                                                  ]
+                                                )
+                                              : _vm._e()
+                                          ]
+                                        )
+                                      ]
                                     )
                                   ],
                                   2
@@ -43523,7 +43859,19 @@ var render = function() {
                           )
                         ]),
                     _vm._v(" "),
-                    _vm._m(4)
+                    _c(
+                      "button",
+                      {
+                        staticClass: "close",
+                        attrs: { type: "button", "aria-label": "Close" },
+                        on: { click: _vm.cancelModal }
+                      },
+                      [
+                        _c("span", { attrs: { "aria-hidden": "true" } }, [
+                          _vm._v("×")
+                        ])
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-body" }, [
@@ -43918,7 +44266,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(5),
+              _vm._m(3),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("p", [
@@ -43991,31 +44339,6 @@ var staticRenderFns = [
         _c("td", { staticClass: "text-center" }, [_vm._v("Action")])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center", attrs: { colspan: "10" } }, [
-      _c("small", { staticClass: "text-muted " }, [_vm._v("No data found.")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close",
-        attrs: {
-          type: "button",
-          "data-dismiss": "modal",
-          "aria-label": "Close"
-        }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
   },
   function() {
     var _vm = this
@@ -61059,6 +61382,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     clearFields: function clearFields(obj) {
       Object.keys(obj).forEach(function (param) {
+        console.log(param);
+
         if (obj[param].toString() === "[object Object]") {
           clearObjectValues(obj[param]);
         } else {
@@ -61180,8 +61505,8 @@ var routes = [{
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\webProject\vemployee\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\webProject\vemployee\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\webproject\vemployee\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\webproject\vemployee\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

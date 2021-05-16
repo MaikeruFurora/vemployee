@@ -107,4 +107,8 @@ class TeacherController extends Controller
         // return new TeacherResource($teacher);
         return response()->json(['data'=>$teacher]);
     }
+
+    public function total(){
+        return response()->json(Teacher::all());
+    }
 }

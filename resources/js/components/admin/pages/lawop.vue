@@ -19,9 +19,11 @@
                                 <!-- begin page title -->
                                 <div class="d-block d-lg-flex flex-nowrap align-items-center">
                                     <div class="page-title mr-4 pr-4">
-                                        <h1>Teacher</h1>
+                                        <h1>Leave without pay</h1>
                                     </div>
                                     <div class="ml-auto d-flex align-items-center secondary-menu text-center">
+                                        <button v-if="isPrint" class="btn btn-primary mr-3" @click="downloadWord()">
+                                            <i class="ti ti-download text-white pr-2"></i> Print Certificate</button>
                                         <multiselect 
                                             v-model="value"
                                             :options="options"
@@ -67,7 +69,8 @@
                                     </tr>
                                     <tr>
                                         <td colspan="7" v-show="!lawops.length">
-                                            No data available
+                                            <p v-show="isStatus==true">No data available</p>
+                                            <p v-show="isStatus==null">Type the name of teacher in the search bar</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -103,29 +106,38 @@ import Multiselect from 'vue-multiselect'
         },
         data(){
           return{
+              isStatus:null,
+              isPrint:false,
               value: null,
               options:[],
               lawops:[],
-              active:false
           }  
         },
         methods:{
             async getResults(){
+                
                 const res = await this.callApi('get',`api/liveSearch`)
                 if (res.status==200) {
+                    
                     this.options=res.data
                 } else {
                     console.log(res.data)
                 }
             },
+            downloadWord(){
+                window.open(`api/getWordRecord/${this.value.id}`,'_blank');  
+            },
             async getLawop(){
-                this.active=true
+                this.isStatus=true
                 this.$Progress.start()
                 const res =await this.callApi('get',`api/getLawop/${this.value.id}`)
                 if (res.status==200) {
+                    res.data.length==0?this.isStatus=true:this.isStatus=false
                     this.$Progress.finish()
                     this.lawops=res.data
-                    this.active.false
+                    // console.log(res.data[0].id);
+                    res.data.length>0?this.isPrint=true:this.isPrint=false
+                    
                 } else {
                     this.$Progress.fail()
                 }

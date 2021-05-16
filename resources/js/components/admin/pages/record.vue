@@ -124,7 +124,7 @@
                     <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title" id="leaveCardLabel">{{ editMode?"Update Information" : "Leave Form" }}</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" @click="closeModal('hide')" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -176,7 +176,10 @@
                             <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label>Nature of Leave</label>
-                                <input type="text" v-model="recordForm.natureOfLeave" class="form-control form-control-sm">
+                                 <select  v-model="recordForm.natureOfLeave" class="form-control form-control-sm">
+                                    <option value="SL">Sick leave</option>
+                                    <option value="VL">Vacation Leave</option>
+                                </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label>DSO Number</label>
@@ -195,7 +198,7 @@
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-secondary" @click="closeModal('hide')">Close</button>
                         <button type="submit" :disabled="active" class="btn btn-sm btn-primary pl-5 pr-5">Save</button>
                     </div>
                     </div>
@@ -310,6 +313,23 @@
                 action||'show'
                 $("#deleteModal").modal(action)  
             },
+            closeModal(action){
+                $("#leaveCard").modal(action)
+                this.recordForm.id=null
+                this.recordForm.teacher_id=null
+                this.recordForm.inclusivePeriod=null
+                this.recordForm.natureOfActivity=null
+                this.recordForm.noOfDaysCredited=null
+                this.recordForm.dsoNumber1=null
+                this.recordForm.inclusiveDates=null
+                this.recordForm.noOfDaysLeave=null
+                this.recordForm.serviceCreditBalance=null
+                this.recordForm.leaveWithoutpay=null
+                this.recordForm.natureOfLeave=null
+                this.recordForm.dsoNumber2=null
+                this.recordForm.remarks=null
+
+            },
              downloadModal(action){
                 action||'show'
                 $("#downloadModal").modal(action)  
@@ -369,6 +389,9 @@
             async downloadExcel(){
                 window.open(`api/getExcelRecord/${this.$router.currentRoute.query.id}`,'_blank');
             },
+            // async downloadPdf(){
+            //     window.open(`api/getPdfRecord/${this.$router.currentRoute.query.id}`,'_blank');
+            // },
             deleteRecord(record){
                 this.obj=record
                 this.deleteModal()

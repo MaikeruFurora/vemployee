@@ -35,4 +35,6 @@ Route::delete('destroyRecord/{id}','RecordController@destroy');
 Route::get('editRecord/{record}','RecordController@edit');
 Route::put('updateRecord','RecordController@update');
 Route::get('getExcelRecord/{teacher}','DownloadController@xslx_export');
+Route::get('getWordRecord/{id}','DownloadController@downloadWord');
 Route::get('getLawop/{id}','RecordController@lawop');
+Route::get('getTotal','TeacherController@total');

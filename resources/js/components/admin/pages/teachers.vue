@@ -100,7 +100,10 @@
                                     </tr>
                                      <tr v-show="!employees.length">
                                         <td colspan="10" class="text-center">
-                                            <small class="text-muted ">No data found.</small>
+                                            <small class="text-muted ">No data found. </small>
+                                                <div class="spinner-border spinner-border-sm" v-if="isLoading" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -135,7 +138,7 @@
                         <span v-else>
                             <h5 class="modal-title" id="verticalCenterTitle">{{editMode ? "Update Information" : "Add Teacher"}}</h5>
                         </span>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" @click="cancelModal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -240,6 +243,7 @@
                     station:'',
                     civilStatus:''
                 },
+                isLoading:false,
                 editMode:false,
                 view:false,
                 employees:[],
@@ -280,9 +284,11 @@
                 })
             },
             async getData(){
+                this.isLoading=true
                 this.$Progress.start()
                 const res = await this.callApi('get',`api/getTeacher/?page=${this.pagination.current_page}`)
                 if (res.status==200 || res.status==201) {
+                    res.data.data.length!=0?this.isLoading=true:this.isLoading=false
                     this.$Progress.finish()
                     this.employees=res.data.data
                     this.pagination=res.data.meta

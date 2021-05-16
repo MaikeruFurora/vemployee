@@ -30,16 +30,16 @@
                                         <div class="col-xxl-3 col-lg-6">
                                             <div class="p-20 border-lg-right border-bottom border-xxl-bottom-0">
                                                 <div class="d-flex m-b-10">
-                                                    <p class="mb-0 font-regular text-muted font-weight-bold">Total Visits</p>
-                                                    <a class="mb-0 ml-auto font-weight-bold" href="#"><i class="ti ti-more-alt"></i> </a>
+                                                    <p class="mb-0 font-regular text-muted font-weight-bold">Total Teachers</p>
                                                 </div>
                                                 <div class="d-block d-sm-flex h-100 align-items-center">
                                                     <div class="apexchart-wrapper">
+                                                        <!-- <i class="fa fa-signal p-0 text-success" style="font-size:40px"></i> -->
                                                         <div id="analytics7"></div>
                                                     </div>
                                                     <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                                        <h3 class="mb-0"><i class="icon-arrow-up-circle"></i> 15,640</h3>
-                                                        <p>Monthly visitor</p>
+                                                        <h3 class="mb-0"><i class="fa fa-group"></i> <span class="noTeacher"></span></h3>
+                                                        <p>Number of Teachers</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -47,16 +47,16 @@
                                         <div class="col-xxl-3 col-lg-6">
                                             <div class="p-20 border-xxl-right border-bottom border-xxl-bottom-0">
                                                 <div class="d-flex m-b-10">
-                                                    <p class="mb-0 font-regular text-muted font-weight-bold">Total Cost</p>
-                                                    <a class="mb-0 ml-auto font-weight-bold" href="#"><i class="ti ti-more-alt"></i> </a>
+                                                    <p class="mb-0 font-regular text-muted font-weight-bold">Total School</p>
                                                 </div>
                                                 <div class="d-block d-sm-flex h-100 align-items-center">
                                                     <div class="apexchart-wrapper">
+                                                        <!-- <i class="fa fa-signal p-0 text-info" style="font-size:40px"></i> -->
                                                         <div id="analytics8"></div>
                                                     </div>
                                                     <div class="statistics mt-3 mt-sm-0 ml-sm-auto text-center text-sm-right">
-                                                        <h3 class="mb-0"><i class="icon-arrow-up-circle"></i> 16,656</h3>
-                                                        <p>This month</p>
+                                                        <h3 class="mb-0"><i class="fa fa-graduation-cap"></i> <span class="noSchool"></span></h3>
+                                                        <p>Number of Schools</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -65,7 +65,6 @@
                                             <div class="p-20 border-lg-right border-bottom border-lg-bottom-0">
                                                 <div class="d-flex m-b-10">
                                                     <p class="mb-0 font-regular text-muted font-weight-bold">Total Sales</p>
-                                                    <a class="mb-0 ml-auto font-weight-bold" href="#"><i class="ti ti-more-alt"></i> </a>
                                                 </div>
                                                 <div class="d-block d-sm-flex h-100 align-items-center">
                                                     <div class="apexchart-wrapper">
@@ -119,8 +118,185 @@
     export default{
         mounted(){
             console.log('dashboard')
-           this.$Progress.start()
-        this.$Progress.finish()
-        }
+            this.getTotal()
+            this.statistic()
+        },
+        methods:{
+            async getTotal(){
+                this.$Progress.start()
+                const res = await this.callApi('get',`api/getTotal`)
+                // console.log(res);
+                if (res.status==200 || res.status==201) {
+                    this.$Progress.finish()
+                    $(".noTeacher").text(res.data.length)
+                    const stationLength = res.data.filter((value,index,array) => {
+                        return  array.indexOf(value.station)==index
+                    });
+
+                    const result = [];
+                    const map = new Map();
+                    for (const item of res.data) {
+                        if(!map.has(item.id)){
+                            map.set(item.id, true);    // set any value to Map
+                            result.push({
+                                id: item.id,
+                                name: item.name
+                            });
+                        }
+                    }
+                    $(".noSchool").text(result.length)
+                } else {
+                    this.$Progress.fail()
+                }
+            },
+
+            statistic(){
+                // analytics7
+        var analytics7 = jQuery('#analytics7')
+            if (analytics7.length > 0) {
+                var options = {
+                    chart: {
+                        type: 'bar',
+                        width: 120,
+                        height: 50,
+                        sparkline: {
+                          enabled: true
+                        }
+                      },
+                      colors:['#8E54E9'],
+                      plotOptions: {
+                        bar: {
+                          columnWidth: '20%',
+                           endingShape: 'rounded',
+                        }
+                      },
+                      series: [{
+                        data: [15, 55, 60, 69, 53, 35, 54]
+                      }],
+                      labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                      xaxis: {
+                        crosshairs: {
+                          width: 1
+                        },
+                      },
+                      tooltip: {
+                        fixed: {
+                          enabled: false
+                        },
+                        x: {
+                          show: false
+                        },
+                        y: {
+                          title: {
+                            formatter: function (seriesName) {
+                              return ''
+                            }
+                          }
+                        },
+                        marker: {
+                          show: false
+                        }
+                      },
+                      responsive: [{
+                        breakpoint: 360,
+                        options: {
+                            chart: {
+                                width:60,
+                                height:60
+                            }
+                        },
+                    },{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width:100,
+                                height:80
+                            }
+                        },
+                    }]
+                }
+
+              var chart = new ApexCharts(
+                        document.querySelector("#analytics7"),
+                        options
+                    );
+                    chart.render();
+               }
+
+               // analytics8
+                var analytics8 = jQuery('#analytics8')
+            if (analytics8.length > 0) {
+                var options = {
+                    chart: {
+                        type: 'bar',
+                        width: 120,
+                        height: 50,
+                        sparkline: {
+                          enabled: true
+                        }
+                      },
+                      colors:['#2bcbba'],
+                      plotOptions: {
+                        bar: {
+                          columnWidth: '20%',
+                           endingShape: 'rounded',
+                        }
+                      },
+                      series: [{
+                        data: [15, 55, 60, 69, 53, 35, 54]
+                      }],
+                      labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                      xaxis: {
+                        crosshairs: {
+                          width: 1
+                        },
+                      },
+                      tooltip: {
+                        fixed: {
+                          enabled: false
+                        },
+                        x: {
+                          show: false
+                        },
+                        y: {
+                          title: {
+                            formatter: function (seriesName) {
+                              return ''
+                            }
+                          }
+                        },
+                        marker: {
+                          show: false
+                        }
+                      },
+                      responsive: [{
+                        breakpoint: 360,
+                        options: {
+                            chart: {
+                                width:60,
+                                height:60
+                            }
+                        },
+                    },{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width:100,
+                                height:80
+                            }
+                        },
+                    }]
+                }
+
+              var chart = new ApexCharts(
+                        document.querySelector("#analytics8"),
+                        options
+                    );
+                    chart.render();
+               }
+            }
+
+        },
+        
     }
 </script>
